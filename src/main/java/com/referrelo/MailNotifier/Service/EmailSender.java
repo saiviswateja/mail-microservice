@@ -13,12 +13,16 @@ public class EmailSender {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private MailHistoryService mailHistoryService;
+
     public void sendSimpleEmail(MailHistory mailHistory) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("referralomailer@gmail.com");
         simpleMailMessage.setTo(mailHistory.getEmailAddress());
         simpleMailMessage.setSubject(mailHistory.getSubject());
         simpleMailMessage.setText(mailHistory.getEmailContent());
+        mailHistoryService.saveEmailHistory(mailHistory);
         log.info("Trying to send email to user " + mailHistory.getEmailAddress());
         javaMailSender.send(simpleMailMessage);
         log.info("Email Sent to user " + mailHistory.getEmailAddress());
